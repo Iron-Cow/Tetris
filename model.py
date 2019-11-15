@@ -60,8 +60,8 @@ class Block:
 
     def drop_block(self):
         self.__y += self.__h
-        if self.__y > self.__field.get_h() + self.__field.get_h_boarder() - self.__h:
-            self.__y = self.__field.get_v_boarder()
+        # if self.__y > self.__field.get_h() + self.__field.get_h_boarder() - self.__h:
+        #     self.__y = self.__field.get_v_boarder()
 
     def move_left(self):
         if self.__x > self.__field.get_v_boarder():
@@ -70,3 +70,4 @@ class Block:
     def move_right(self):
         if self.__x < self.__field.get_w() + self.__field.get_v_boarder() - self.__w:
             self.__x += self.__w
+
