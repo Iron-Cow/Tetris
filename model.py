@@ -112,6 +112,7 @@ class Figure:
             block.draw_block(self.__surface)
 
     def fall(self):
+        """Figure fall down by TIME (not button)"""
         for block in self.__generate_block_list():
             try:
                 # if block under current if empty - block can be dropped
