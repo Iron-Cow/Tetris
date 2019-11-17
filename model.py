@@ -29,6 +29,7 @@ class Field:
                          [self.__v_boarder, self.__h_boarder, self.__w, self.__h],
                          1)
 
+
 class Block:
     def __init__(self, x: float,
                  y: float,
@@ -70,4 +71,3 @@ class Block:
     def move_right(self):
         if self.__x < self.__field.get_w() + self.__field.get_v_boarder() - self.__w:
             self.__x += self.__w
-
