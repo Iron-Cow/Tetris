@@ -1,5 +1,7 @@
 import pygame
 from random import randint
+from numpy import rot90, array
+
 
 class Field:
     def __init__(self, w: int, h: int, v_boarder: int, h_boarder: int, bg_color: tuple, frame_color: tuple):
@@ -72,7 +74,7 @@ class Block:
         pygame.draw.rect(surface=surface, rect=[self.__x, self.__y, self.__w, self.__h],
                          color=self.__color)
         pygame.draw.rect(surface, (randint(0, 255), randint(0, 255), randint(0, 255)),
-                         [self.__x, self.__y, self.__w, self.__h], 2)
+                         [self.__x, self.__y, self.__w, self.__h], 1)
 
     def drop_block(self):
         self.__y += self.__h
@@ -90,22 +92,17 @@ class Block:
 
 class Figure:
     """Multiblock figure like in real tetris"""
-    def __init__(self, surface, x: float, y: float,  name: str, config: list, color: tuple, field: Field,
+    def __init__(self, surface, x: float, y: float, config: list, color: tuple, field: Field,
                  block_field: BlockField, block_w: float = 50, block_h: float = 50, ):
         self.__surface = surface
         self.__x = x
         self.__y = y
-        self.__name = name
         self.__config = config
         self.__color = color
         self.__field = field
         self.__block_w = block_w
         self.__block_h = block_h
         self.__block_field = block_field
-
-        """[[0, 0, 0],
-            [1, 0, 0], 
-            [1, 1, 1]]"""
 
     def __generate_block_list(self) -> list:
         """Generates list of Block objects"""
@@ -131,7 +128,8 @@ class Figure:
         for block in self.__generate_block_list():
             try:
                 # if block under current if empty - block can be dropped
-                if self.__block_field.get_block_field()[block.get_y() // block.get_h() + 1][block.get_x() // block.get_w()] == 0:
+                if self.__block_field.get_block_field()[block.get_y() // block.get_h() + 1][block.get_x() //
+                                                                                            block.get_w()] == 0:
                     pass
                 # else: block reached filled block and should be marked as filled also + initiate new block
                 else:
@@ -143,18 +141,25 @@ class Figure:
                 self.figure_stand()
                 return False
         self.__y += self.__block_h
-            # block.draw_block(self.__surface)
         return True
 
     def move_left(self) -> None:
         for block in self.__generate_block_list():
             if block.get_x() <= self.__field.get_v_boarder():
                 return
+            left_block_check_index_x = block.get_x()//block.get_w() - 1
+            left_block_check_index_y = block.get_y()//block.get_h()
+            if self.__block_field.get_block_field()[left_block_check_index_y][left_block_check_index_x] == 1:
+                return
         self.__x -= self.__block_w
 
     def move_right(self) -> None:
         for block in self.__generate_block_list():
             if block.get_x() >= self.__field.get_w() + self.__field.get_v_boarder() - self.__block_w:
+                return
+            left_block_check_index_x = block.get_x()//block.get_w() + 1
+            left_block_check_index_y = block.get_y()//block.get_h()
+            if self.__block_field.get_block_field()[left_block_check_index_y][left_block_check_index_x] == 1:
                 return
         self.__x += self.__block_w
 
@@ -166,12 +171,21 @@ class Figure:
             a[block.get_y() // block.get_h()][block.get_x() // block.get_w()] = 1
             self.__block_field.set_block_field(a)
 
-
-
     def get_block_w(self):
         return self.__block_w
 
     def get_block_h(self):
         return self.__block_h
 
+    def rotated_figure(self):
+        a = array(self.__config)
+        b = rot90(a, 1)
+        for i, fig_row in enumerate(b):
+            for j, el in enumerate(fig_row):
+                if el == 1:
+                    if self.__block_field.get_block_field()[int(self.__y // self.__block_h + i)][int(self.__x // self.__block_w + j)] == 1:
+                        return a
+        return list(b)
 
+    def set_config(self, con):
+        self.__config = con
