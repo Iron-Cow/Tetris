@@ -1,5 +1,5 @@
 import pygame
-
+from random import randint
 
 class Field:
     def __init__(self, w: int, h: int, v_boarder: int, h_boarder: int, bg_color: tuple, frame_color: tuple):
@@ -30,6 +30,18 @@ class Field:
                          1)
 
 
+class BlockField:
+    """List with empty/filled blocks"""
+    def __init__(self, config: list):
+        self.__config = config
+
+    def get_block_field(self):
+        return self.__config
+
+    def set_block_field(self, config: list):
+        self.__config = config
+
+
 class Block:
     def __init__(self, x: float,
                  y: float,
@@ -57,7 +69,10 @@ class Block:
         return self.__h
 
     def draw_block(self, surface):
-        pygame.draw.rect(surface=surface, rect=[self.__x, self.__y, self.__w, self.__h], color=self.__color)
+        pygame.draw.rect(surface=surface, rect=[self.__x, self.__y, self.__w, self.__h],
+                         color=self.__color)
+        pygame.draw.rect(surface, (randint(0, 255), randint(0, 255), randint(0, 255)),
+                         [self.__x, self.__y, self.__w, self.__h], 2)
 
     def drop_block(self):
         self.__y += self.__h
@@ -76,7 +91,7 @@ class Block:
 class Figure:
     """Multiblock figure like in real tetris"""
     def __init__(self, surface, x: float, y: float,  name: str, config: list, color: tuple, field: Field,
-                 block_field, block_w: float = 50, block_h: float = 50, ):
+                 block_field: BlockField, block_w: float = 50, block_h: float = 50, ):
         self.__surface = surface
         self.__x = x
         self.__y = y
@@ -116,17 +131,20 @@ class Figure:
         for block in self.__generate_block_list():
             try:
                 # if block under current if empty - block can be dropped
-                if self.__block_field[block.get_y() // block.get_h() + 1][block.get_x() // block.get_w()] == 0:
+                if self.__block_field.get_block_field()[block.get_y() // block.get_h() + 1][block.get_x() // block.get_w()] == 0:
                     pass
                 # else: block reached filled block and should be marked as filled also + initiate new block
                 else:
-                    # add_square(self.__field, block)
-                    block = Block(260, 60, 50, 50, (255, 255, 255), self.__surface)
+                    self.figure_stand()
+                    return False
+                    # block = Block(260, 60, 50, 50, (255, 255, 255), self.__surface)
 
             except IndexError:  # block reached ground
-                return
+                self.figure_stand()
+                return False
         self.__y += self.__block_h
             # block.draw_block(self.__surface)
+        return True
 
     def move_left(self) -> None:
         for block in self.__generate_block_list():
@@ -139,4 +157,21 @@ class Figure:
             if block.get_x() >= self.__field.get_w() + self.__field.get_v_boarder() - self.__block_w:
                 return
         self.__x += self.__block_w
+
+    def figure_stand(self) -> None:
+        """Transforms current figure to static blocks and creates new one """
+        for block in self.__generate_block_list():
+            """Changes field list from 0 to 1 for filled brick"""
+            a = self.__block_field.get_block_field()
+            a[block.get_y() // block.get_h()][block.get_x() // block.get_w()] = 1
+            self.__block_field.set_block_field(a)
+
+
+
+    def get_block_w(self):
+        return self.__block_w
+
+    def get_block_h(self):
+        return self.__block_h
+
 

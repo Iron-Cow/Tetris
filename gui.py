@@ -1,28 +1,28 @@
 from pygame import draw
-from model import Field, Block
+from model import Field, Block, Figure
 
 # 12x12 field
-field = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+# field = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+field = [[0 for _ in range(12)] for __ in range(12)]
 
-
-def draw_bricks(block_field: list, surface, f: Field, b: Block) -> None:
+def draw_bricks(block_field: list, surface, f: Field, b: Figure) -> None:
     """Draws all dropped bricks on the field"""
     for i, row in enumerate(block_field):
         for j, el in enumerate(row):
             if el:
                 draw.rect(surface,
                           color=(255, 50, 50),
-                          rect=[f.get_v_boarder() + j*b.get_w(),
-                                f.get_h_boarder() + i*b.get_h(),
-                                b.get_w(),
-                                b.get_h()])
+                          rect=[f.get_v_boarder() + j*b.get_block_w(),
+                                f.get_h_boarder() + i*b.get_block_h(),
+                                b.get_block_w(),
+                                b.get_block_h()])
                 # frame just for contrast
                 draw.rect(surface,
                           (255, 255, 255),
-                          [f.get_v_boarder() + j * b.get_w(),
-                                f.get_h_boarder() + i * b.get_h(),
-                                b.get_w(),
-                                b.get_h()],
+                          [f.get_v_boarder() + j * b.get_block_w(),
+                                f.get_h_boarder() + i * b.get_block_h(),
+                                b.get_block_w(),
+                                b.get_block_h()],
                                 1)
 
 

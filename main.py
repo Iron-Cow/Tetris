@@ -1,12 +1,13 @@
 import pygame
-from model import Block, Field, Figure
+from model import Block, Field, Figure, BlockField
 from gui import field, draw_bricks, add_square, check_lines
 
 if __name__ == "__main__":
     pygame.init()
 
     # list of filled/blank blocks
-    block_field = field
+    block_field = BlockField(config=[[0 for _ in range(12)] for __ in range(12)])
+    # block_field = field
 
     # Initiating field. For current project it is 10px frame and 12x12 field made by 50x50px blocks
     screen = Field(600, 600, 10, 10, (0, 0, 0), (255, 255, 255))
@@ -16,8 +17,8 @@ if __name__ == "__main__":
     # Block size initiating
     # block = Block(260, 60, 50, 50, (255, 255, 255), screen)
     figure = Figure(surface=window,
-                    x=60,
-                    y=60,
+                    x=110,
+                    y=10,
                     name="L",
                     color=(255, 255, 255),
                     config=[[0, 0, 0], [1, 0, 0], [1, 1, 1]],
@@ -53,8 +54,8 @@ if __name__ == "__main__":
 
                     elif event.key == pygame.K_SPACE:
                         figure = Figure(surface=window,
-                                        x=60,
-                                        y=60,
+                                        x=110,
+                                        y=10,
                                         name="L",
                                         color=(255, 255, 255),
                                         config=[[0, 0, 0], [1, 0, 0], [1, 1, 1]],
@@ -78,12 +79,22 @@ if __name__ == "__main__":
             # except IndexError:  # block reached ground
             #     add_square(block_field, block)
             #     block = Block(260, 60, 50, 50, (255, 255, 255), screen)
-            figure.fall()
+            if not figure.fall():
+
+                figure = Figure(surface=window,
+                                x=210,
+                                y=10,
+                                name="L",
+                                color=(255, 255, 255),
+                                config=[[0, 0, 0], [1, 0, 0], [1, 1, 1]],
+                                field=screen,
+                                block_field=block_field
+                                )
             tick_counter = 0
 
-        # draw_bricks(block_field, window, f=screen, b=block)  # draw filled bricks
+        draw_bricks(block_field.get_block_field(), window, f=screen, b=figure)  # draw filled bricks
         # block.draw_block(window)  # draw current dropping brick
-        # check_lines(block_field)  # check if fully filled line on the field and deletes it
+        check_lines(block_field.get_block_field())  # check if fully filled line on the field and deletes it
         figure.draw_figure()
 
         pygame.display.update()
