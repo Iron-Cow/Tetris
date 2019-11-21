@@ -183,9 +183,25 @@ class Figure:
         for i, fig_row in enumerate(b):
             for j, el in enumerate(fig_row):
                 if el == 1:
-                    if self.__block_field.get_block_field()[int(self.__y // self.__block_h + i)][int(self.__x // self.__block_w + j)] == 1:
+                    if self.__block_field.get_block_field()[int(self.__y // self.__block_h + i)][int(
+                            self.__x // self.__block_w + j)] == 1:
                         return a
         return list(b)
 
     def set_config(self, con):
         self.__config = con
+
+
+class Score:
+    def __init__(self, score: int, x: float, y: float):
+        self.__score = score
+        self.__x = x
+        self.__y = y
+
+    def draw_score(self, surface):
+        font = pygame.font.Font("freesansbold.ttf", 32)
+        score = font.render(f"Score: {self.__score}", True, (255, 255, 255))
+        surface.blit(score, (self.__x, self.__y))
+
+    def add_point(self):
+        self.__score += 1

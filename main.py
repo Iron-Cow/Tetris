@@ -1,6 +1,6 @@
 import pygame
-from model import Field, Figure, BlockField
-from gui import  draw_bricks, check_lines
+from model import Field, Figure, BlockField, Score
+from gui import draw_bricks, check_lines
 from random import randint
 
 if __name__ == "__main__":
@@ -30,7 +30,7 @@ if __name__ == "__main__":
         [[1, 1, 1, 1]]
     ]
 
-
+    score = Score(0, 30, 30)
 
     # Initiating field. For current project it is 10px frame and 12x12 field made by 50x50px blocks
     screen = Field(600, 700, 10, 10, (0, 0, 0), (255, 255, 255))
@@ -76,6 +76,9 @@ if __name__ == "__main__":
                     elif event.key == pygame.K_LEFT:
                         figure.move_left()
 
+                    elif event.key == pygame.K_DOWN:
+                        figure.fall()
+
                     elif event.key == pygame.K_SPACE:
                         figure.set_config(figure.rotated_figure())
 
@@ -86,9 +89,9 @@ if __name__ == "__main__":
             if not figure.fall():
                 figure = figure_create()
             tick_counter = 0
-
+        score.draw_score(window)
         draw_bricks(block_field.get_block_field(), window, f=screen, b=figure)  # draw filled bricks
-        check_lines(block_field.get_block_field())  # check if fully filled line on the field and deletes it
+        check_lines(block_field.get_block_field(), score)  # check if fully filled line on the field and deletes it
         figure.draw_figure()
         if 1 in block_field.get_block_field()[1]:
             run = False

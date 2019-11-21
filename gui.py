@@ -1,5 +1,6 @@
+import pygame
 from pygame import draw
-from model import Field, Block, Figure
+from model import Field, Block, Figure, Score
 
 # 12x12 field
 # field = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
@@ -31,7 +32,7 @@ def add_square(block_field: list, block: Block) -> None:
     block_field[block.get_y() // block.get_h()][block.get_x() // block.get_w()] = 1
 
 
-def check_lines(block_field: list):
+def check_lines(block_field: list, score: Score):
     """ check if fully filled line on the field and deletes it"""
     for i, row in enumerate(block_field):
         if row == [1 for _ in range(12)]:
@@ -39,4 +40,7 @@ def check_lines(block_field: list):
             a = [0 for _ in range(12)]
             block_field.insert(0, a)
             print(block_field)
+            score.add_point()
             break
+
+
