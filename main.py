@@ -96,4 +96,3 @@ if __name__ == "__main__":
         if 1 in block_field.get_block_field()[1]:
             run = False
 
-        pygame.display.update()
